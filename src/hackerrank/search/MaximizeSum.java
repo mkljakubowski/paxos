@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 class Node{
-    int i;
-    int v;
+    long i;
+    long v;
 
-    Node(int i, int v) {
+    Node(long i, long v) {
         this.i = i;
         this.v = v;
     }
@@ -17,40 +17,36 @@ public class MaximizeSum {
 
     static Scanner in = new Scanner(System.in);
 
-    static int doStuff(){
+    static long doStuff(){
         String[] props = in.nextLine().split(" ");
         int size = Integer.parseInt(props[0]);
-        int mod = Integer.parseInt(props[1]);
+        long mod = Integer.parseInt(props[1]);
         Node[] nums = new Node[size];
         String[] numsStr = in.nextLine().split(" ");
-        int curr = 0;
+        long curr = 0;
 
         for(int i = 0 ; i < size ; i++){
-            int val = Integer.parseInt(numsStr[i]);
-            nums[i] = new Node(i, (curr + val)%mod);
+            long val = Integer.parseInt(numsStr[i]);
             curr = (curr + val)%mod;
-            System.out.println(curr);
+            nums[i] = new Node(i, curr);
         }
 
-        Arrays.sort(nums, (Node r1, Node r2) -> r1.v - r2.v);
+        Arrays.sort(nums, (Node r1, Node r2) -> (int)(r1.v - r2.v));
 
-        int result = mod, next;
-        for(int i = 0 ; i < size-1 ; i++) {
-            System.out.println(nums[i].i + " " + nums[i+1].i);
+        long ret = mod;
+        for(int i = 0; i < size-1; i++) {
             if(nums[i].i > nums[i+1].i){
-                curr = nums[i].v;
-                next = nums[i+1].v;
-                if(next - curr < result && next - curr > 0){
-                    result = next - curr;
-                }
+                ret = Math.min(ret, (nums[i+1].v - nums[i].v + mod) % mod);
             }
+            ret = Math.min(ret, nums[i].v);
         }
-        return mod - result;
+
+        return mod - ret;
     }
 
     public static void main(String[] args) {
-        int problems = Integer.parseInt(in.nextLine());
-        for(int i = 0 ; i < problems ; i++){
+        long problems = Integer.parseInt(in.nextLine());
+        for(long i = 0 ; i < problems ; i++){
             System.out.println(doStuff());
         }
     }
